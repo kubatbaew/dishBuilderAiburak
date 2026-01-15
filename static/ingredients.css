@@ -1,0 +1,180 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  background: #f7f7f7;
+  color: #1f2933;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: #111827;
+  color: #fff;
+  padding: 24px;
+}
+
+.logo {
+  display: flex;
+  gap: 12px;
+  font-size: 22px;
+  margin-bottom: 40px;
+}
+
+.logo i {
+  color: #4caf50;
+}
+
+.menu a {
+  display: flex;
+  gap: 14px;
+  padding: 12px 14px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.menu a.active,
+.menu a:hover {
+  background: #1f2937;
+  color: #fff;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 40px 60px;
+  overflow-y: auto;
+}
+
+h1 {
+  font-size: 34px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+/* INGREDIENTS */
+.ingredients {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.ingredient-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.2s;
+  text-align: center;
+}
+
+.ingredient-card img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+
+.ingredient-card span {
+  display: block;
+  padding: 12px;
+  font-weight: 500;
+}
+
+.ingredient-card.active {
+  border-color: #4caf50;
+}
+
+/* BUTTON */
+.find-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+
+/* DISHES */
+.dishes {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+/* LOADER */
+.loader {
+  display: none;
+  justify-content: center;
+  padding: 30px;
+}
+
+.loader span {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #4caf50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* DISH LIST */
+.dish-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.dish-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  transition: 0.2s;
+}
+
+.dish-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.dish-info {
+  padding: 14px;
+}
+
+.dish-card h3 {
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+.dish-card p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.dish-card:hover {
+  border-color: #4caf50;
+  transform: translateY(-2px);
+}

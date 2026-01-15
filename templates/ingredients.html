@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>DishBuilder — Ингредиенты</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'ingredients.css' %}">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" style="width: 325px;">
+    <div class="logo" style="font-size: 22px; font-weight: 600; align-items: center;">
+      <i class="fa-solid fa-bowl-food" style="font-size: 26px;"></i>
+      <span>DishBuilder</span>
+    </div>
+
+    <nav class="menu">
+      <a href="{% url 'homepage' %}" style="align-items: center;">
+        <i class="fa-solid fa-home"></i>
+        Главная
+      </a>
+      <a href="{% url 'ingredients' %}" class="active" style="align-items: center;">
+        <i class="fa-solid fa-leaf"></i>
+        Ингредиенты
+      </a>
+      <a href="#" style="align-items: center;">
+        <i class="fa-solid fa-utensils"></i>
+        Блюда
+      </a>
+      <a href="#" style="align-items: center;">
+        <i class="fa-solid fa-calculator"></i>
+        Калькулятор
+      </a>
+      <a href="#" style="align-items: center;">
+        <i class="fa-solid fa-star"></i>
+        Избранное
+      </a>
+      <a href="{% url 'logout_logics' %}" style="align-items: center;">
+        <i class="fa-solid fa-sign-out"></i>
+        Выход
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>Выберите ингредиенты 🥕</h1>
+    <p class="subtitle">Отметьте ингредиенты — мы покажем, что можно приготовить</p>
+
+    <!-- INGREDIENTS -->
+    <section class="ingredients">
+
+      {% for ingredient in ingredients_obj %}
+        <div class="ingredient-card" data-ingredient="{{ ingredient.slug }}">
+          <img src="{{ ingredient.image.url }}">
+          <span>{{ ingredient.title }}</span>
+        </div>
+      {% endfor %}
+
+    </section>
+
+    <button class="find-btn" id="findBtn">
+      Найти блюда
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+
+    <!-- RESULT -->
+    <section class="dishes">
+
+      <!-- LOADER -->
+      <div class="loader" id="loader">
+        <span></span>
+      </div>
+
+      <!-- DISH LIST -->
+      <div class="dish-list" id="dishList"></div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const ingredientCards = document.querySelectorAll('.ingredient-card');
+  const findBtn = document.getElementById('findBtn');
+  const loader = document.getElementById('loader');
+  const dishList = document.getElementById('dishList');
+
+  let selectedIngredients = [];
+
+  ingredientCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const ingredient = card.dataset.ingredient;
+      card.classList.toggle('active');
+
+      if (selectedIngredients.includes(ingredient)) {
+        selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+      } else {
+        selectedIngredients.push(ingredient);
+      }
+    });
+  });
+
+  findBtn.addEventListener('click', () => {
+    if (selectedIngredients.length === 0) {
+      alert('Выберите хотя бы один ингредиент');
+      return;
+    }
+
+    dishList.innerHTML = '';
+    loader.style.display = 'flex';
+
+    fetch('/api/find-dishes/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({
+        ingredients: selectedIngredients
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      // ⏳ держим лоадер 3 секунды
+      setTimeout(() => {
+        loader.style.display = 'none';
+        renderDishes(data.dishes);
+      }, 1000);
+    })
+    .catch(err => {
+      loader.style.display = 'none';
+      console.error(err);
+      alert('Ошибка сервера');
+    });
+  });
+
+  function renderDishes(dishes) {
+    dishList.innerHTML = '';
+
+    if (dishes.length === 0) {
+      dishList.innerHTML = '<p>Ничего не найдено</p>';
+      return;
+    }
+
+    dishes.forEach(dish => {
+      const card = document.createElement('div');
+      card.className = 'dish-card';
+      card.innerHTML = `
+        <img src="${dish.image}" alt="${dish.name}">
+        <div class="dish-info">
+          <h3>${dish.name}</h3>
+          <p>${dish.desc}</p>
+        </div>
+      `;
+      dishList.appendChild(card);
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+
+</body>
+</html>

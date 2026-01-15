@@ -1,0 +1,71 @@
+from django.db import models
+
+
+class Dish(models.Model):
+    image = models.ImageField(
+        upload_to="dishes/",
+        verbose_name="Картинка"
+    )
+    title = models.CharField(
+        verbose_name="Название",
+        max_length=120,
+    )
+    description = models.TextField(
+        max_length=750,
+        verbose_name="Описание",
+    )
+    quote = models.CharField(
+        max_length=100,
+        verbose_name="Цитата",
+    )
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = "Блюдо"
+        verbose_name_plural = "Блюда"
+
+
+class DishIngredient(models.Model):
+    title = models.CharField(
+        max_length=120,
+        verbose_name="Название",
+    )
+    image = models.ImageField(
+        upload_to="dish_ingredients/",
+    )
+    slug = models.SlugField(
+        unique=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = "Ингредиент Блюда"
+        verbose_name_plural = "Ингредиенты Блюда"
+
+
+class DishIngredientGramm(models.Model):
+    dish = models.ForeignKey(
+        Dish, on_delete=models.CASCADE,
+        verbose_name="Блюдо",
+    )
+    dish_ingredient = models.ForeignKey(
+        DishIngredient, on_delete=models.CASCADE,
+        verbose_name="Ингредиент Блюда"
+    )
+    gramm = models.PositiveSmallIntegerField(
+        verbose_name="Грамм",
+        help_text="Граммовка на 300 грамм блюдо"
+    )
+
+    def __str__(self):
+        return f"{self.dish_ingredient} — {self.gramm} г"
+    
+    class Meta:
+        verbose_name = "Ингредиент Блюда Грамм"
+        verbose_name_plural = "Ингредиенты Блюда Граммы"
+        unique_together = ("dish", "dish_ingredient")

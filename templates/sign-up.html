@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>DishBuilder — Регистрация</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    body {
+      background: #f7f7f7;
+      color: #1f2933;
+    }
+
+    .app {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: #111827;
+      color: #fff;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 600;
+      justify-content: center;
+    }
+
+    .logo i {
+      color: #4caf50;
+      font-size: 28px;
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background: #fff;
+      width: 460px;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    .login-box h1 {
+      font-size: 28px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .login-box p {
+      font-size: 14px;
+      color: #6b7280;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #4caf50;
+    }
+
+    .login-btn {
+      width: 100%;
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background: #43a047;
+    }
+
+    .extra {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .extra a {
+      color: #4caf50;
+      text-decoration: none;
+      font-weight: 500;
+    }
+  </style>
+
+  <style>
+      .modal-text {
+          font-size: 15px;
+          line-height: 1.5;
+          display: flex;
+      }
+
+          /* Цвета сообщений */
+      .modal-text.error {
+          color: #d32f2f;
+          display: flex;
+      }
+
+      .modal-text.success {
+          color: #2e7d32;
+          display: flex;
+      }
+
+          /* Анимации */
+      @keyframes fadeIn {
+          from { opacity: 0 }
+          to { opacity: 1 }
+      }
+
+      @keyframes scaleIn {
+          from { transform: scale(0.95) }
+          to { transform: scale(1) }
+      }
+  </style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="login-box">
+      <h1>Регистрация</h1>
+      <p>Создайте свой аккаунт DishBuilder</p>
+
+      <form action="{% url 'sign_up' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" placeholder="aiburak" name="username" required>
+        </div>
+
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" placeholder="••••••••" name="password" required>
+        </div>
+
+        <div class="form-group">
+          <label>Повторите пароль</label>
+          <input type="password" placeholder="••••••••" required>
+        </div>
+
+        <p id="error" style="
+            display:none;
+            color:#dc2626;
+            font-size:14px;
+            margin-top:10px;
+            text-align:center;
+            ">
+            Пароли не совпадают
+        </p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="modal-text {{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <button class="login-btn" type="submit">Зарегистрироваться</button>
+      </form>
+
+      <div class="extra">
+        Уже есть аккаунта?
+        <a href="{% url 'login' %}">Войти</a>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  const form = document.querySelector('form');
+  const password = form.querySelectorAll('input[type="password"]')[0];
+  const confirmPassword = form.querySelectorAll('input[type="password"]')[1];
+  const error = document.getElementById('error');
+
+  form.addEventListener('submit', function (e) {
+    if (password.value !== confirmPassword.value) {
+      e.preventDefault();
+
+      error.style.display = 'block';
+
+      password.style.borderColor = '#dc2626';
+      confirmPassword.style.borderColor = '#dc2626';
+    } else {
+      error.style.display = 'none';
+
+      password.style.borderColor = '#4caf50';
+      confirmPassword.style.borderColor = '#4caf50';
+    }
+  });
+
+    confirmPassword.addEventListener('input', () => {
+        if (password.value === confirmPassword.value) {
+            error.style.display = 'none';
+            password.style.borderColor = '#4caf50';
+            confirmPassword.style.borderColor = '#4caf50';
+        }
+    });
+
+</script>
+
+</body>
+</html>

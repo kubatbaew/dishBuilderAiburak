@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>DishBuilder — Умный подбор блюд</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome (иконки) -->
+  <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <i class="fa-solid fa-bowl-food"></i>
+      <span>DishBuilder</span>
+    </div>
+
+    <nav class="menu">
+      <a href="{% url 'homepage' %}" class="active">
+        <i class="fa-solid fa-home"></i>
+        Главная
+      </a>
+      <a href="{% url 'ingredients' %}">
+        <i class="fa-solid fa-leaf"></i>
+        Ингредиенты
+      </a>
+      <a href="#">
+        <i class="fa-solid fa-utensils"></i>
+        Блюда
+      </a>
+      <a href="#">
+        <i class="fa-solid fa-calculator"></i>
+        Калькулятор
+      </a>
+      <a href="#">
+        <i class="fa-solid fa-star"></i>
+        Избранное
+      </a>
+      <a href="{% url 'logout_logics' %}">
+        <i class="fa-solid fa-sign-out"></i>
+        Выход
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="content">
+      <h1>Добро пожаловать<br>в <span>DishBuilder</span></h1>
+      <p>
+        Укажите ингредиенты, которые есть у вас под рукой,  
+        и мы покажем блюда, которые можно приготовить прямо сейчас.
+      </p>
+
+      <button class="primary-btn">
+        Подобрать блюда
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <div class="image-block">
+      <img src="{% static 'homepage_image.jpg' %}"
+           alt="Salad">
+    </div>
+  </main>
+
+</div>
+
+</body>
+</html>
