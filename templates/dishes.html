@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>DishBuilder — Блюда</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'dishes.css' %}">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" style="width: 325px;">
+    <div class="logo" style="font-size: 22px; font-weight: 600; align-items: center;">
+      <i class="fa-solid fa-bowl-food" style="font-size: 26px;"></i>
+      <span>DishBuilder</span>
+    </div>
+
+    <nav class="menu">
+      <a href="{% url 'homepage' %}" style="align-items: center;">
+        <i class="fa-solid fa-home"></i>
+        Главная
+      </a>
+      <a href="{% url 'ingredients' %}" style="align-items: center;">
+        <i class="fa-solid fa-leaf"></i>
+        Ингредиенты
+      </a>
+      <a href="{% url 'list_dishes' %}" class="active" style="align-items: center;">
+        <i class="fa-solid fa-utensils"></i>
+        Блюда
+      </a>
+      <a href="#" style="align-items: center;">
+        <i class="fa-solid fa-calculator"></i>
+        Калькулятор
+      </a>
+      <a href="#" style="align-items: center;">
+        <i class="fa-solid fa-star"></i>
+        Избранное
+      </a>
+      <a href="{% url 'logout_logics' %}" style="align-items: center;">
+        <i class="fa-solid fa-sign-out"></i>
+        Выход
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>Блюда 🍽️</h1>
+    <p class="subtitle">Подборка блюд с кратким описанием</p>
+
+    <!-- DISH LIST -->
+    <section class="dish-list">
+
+      {% for dish in dishes %}
+
+      <a href="" style="text-decoration: none; color: #1f2933;">
+        <div class="dish-item">
+
+          <img src="{{ dish.image.url }}" alt="{{ dish.title }}">
+          <div class="dish-info">
+            <h3>{{ dish.title }}</h3>
+            <p>{{ dish.description|truncatewords:14 }}</p>
+          </div>
+        </div>
+      </a>
+
+      {% endfor %}
+
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>

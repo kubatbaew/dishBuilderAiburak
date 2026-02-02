@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from django.shortcuts import render, redirect
 
-from apps.dishes.models import DishIngredient
+from apps.dishes.models import DishIngredient, Dish
 
 
 @login_required(login_url="login")
@@ -19,6 +19,12 @@ def ingredients(request):
     ingredients_obj = DishIngredient.objects.all()
     
     return render(request, "ingredients.html", locals())
+
+
+def list_dishes(request):
+    dishes = Dish.objects.all()
+
+    return render(request, "dishes.html", locals())
 
 
 def login(request):
