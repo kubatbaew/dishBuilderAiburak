@@ -21,17 +21,25 @@ def ingredients(request):
     return render(request, "ingredients.html", locals())
 
 
+@login_required(login_url="login")
 def list_dishes(request):
     dishes = Dish.objects.all()
 
     return render(request, "dishes.html", locals())
 
 
+@login_required(login_url="login")
 def detail_dish(request, pk):
     dish = get_object_or_404(Dish, pk=pk)
 
     return render(request, "dish-detail.html", locals())
 
+
+@login_required(login_url="login")
+def calculator(request):
+    dishes = Dish.objects.all()
+
+    return render(request, "calculator.html", locals())
 
 
 def login(request):

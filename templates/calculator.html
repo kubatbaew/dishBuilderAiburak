@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>DishBuilder — Калькулятор</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'calculator.css' %}">
+  
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" style="width: 325px;">
+    <div class="logo" style="font-size: 22px; font-weight: 600; align-items: center;">
+      <i class="fa-solid fa-bowl-food" style="font-size: 26px;"></i>
+      <span>DishBuilder</span>
+    </div>
+
+    <nav class="menu">
+      <a href="{% url 'homepage' %}" style="align-items: center;">
+        <i class="fa-solid fa-home"></i>
+        Главная
+      </a>
+      <a href="{% url 'ingredients' %}" style="align-items: center;">
+        <i class="fa-solid fa-leaf"></i>
+        Ингредиенты
+      </a>
+      <a href="{% url 'list_dishes' %}" style="align-items: center;">
+        <i class="fa-solid fa-utensils"></i>
+        Блюда
+      </a>
+      <a href="{% url 'calculator' %}" class="active" style="align-items: center;">
+        <i class="fa-solid fa-calculator"></i>
+        Калькулятор
+      </a>
+      <a href="{% url 'logout_logics' %}" style="align-items: center;">
+        <i class="fa-solid fa-sign-out"></i>
+        Выход
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>Калькулятор салатов 🥗</h1>
+    <p class="subtitle">
+      Выберите салат и укажите нужную граммовку — мы рассчитаем ингредиенты
+    </p>
+
+    <!-- SALADS -->
+    <section class="salads">
+
+        {% for dish in dishes %}
+          <div class="salad-card {% if forloop.first %}active{% endif %}" data-id="{{ dish.id }}">
+            <img src="{{ dish.image.url }}">
+            <h3>{{ dish.title }}</h3>
+          </div>
+        {% endfor %}
+
+    </section>
+
+    <!-- GRAMS -->
+    <section class="grams">
+        <label>Сколько граммов приготовить?</label>
+        <input type="number" id="gramsInput" placeholder="Например: 500">
+        <button id="calculateBtn">
+            Рассчитать
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </section>
+
+
+    <!-- RESULT -->
+    <section class="result">
+
+        <div class="loader" id="loader">
+            <span></span>
+        </div>
+
+        <table id="resultTable" style="display:none;">
+            <thead>
+            <tr>
+                <th>Ингредиент</th>
+                <th>Количество (г)</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+
+    </section>
+
+
+  </main>
+</div>
+
+<script>
+  const saladCards = document.querySelectorAll('.salad-card');
+  const calculateBtn = document.getElementById('calculateBtn');
+  const gramsInput = document.getElementById('gramsInput');
+  const loader = document.getElementById('loader');
+  const table = document.getElementById('resultTable');
+  const tableBody = document.getElementById('tableBody');
+
+  let selectedDishId = document.querySelector('.salad-card.active').dataset.id;
+
+  saladCards.forEach(card => {
+    card.addEventListener('click', () => {
+      saladCards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      selectedDishId = card.dataset.id;
+    });
+  });
+
+  calculateBtn.addEventListener('click', () => {
+    const grams = gramsInput.value;
+
+    if (!grams || grams <= 0) {
+      alert('Введите корректную граммовку');
+      return;
+    }
+
+    table.style.display = 'none';
+    loader.style.display = 'flex';
+
+    fetch(`/api/calculator-logics/?dish_id=${selectedDishId}&grams=${grams}`)
+      .then(res => res.json())
+      .then(data => {
+
+        // ⏳ Лоадер минимум 1500 мс
+        setTimeout(() => {
+          loader.style.display = 'none';
+          table.style.display = 'table';
+
+          tableBody.innerHTML = '';
+
+          data.ingredients.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${item.ingredient}</td>
+              <td>${item.grams}</td>
+            `;
+            tableBody.appendChild(tr);
+          });
+
+        }, 1500);
+      });
+  });
+</script>
+
+</body>
+</html>

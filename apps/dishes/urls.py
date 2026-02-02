@@ -9,10 +9,12 @@ urlpatterns = [
     path('ingredients/', dish_views.ingredients, name="ingredients"),
     path('dishes/', dish_views.list_dishes, name="list_dishes"),
     path('dishes/<int:pk>', dish_views.detail_dish, name="detail_dish"),
+    path('calculator/', dish_views.calculator, name="calculator"),
 
     path('login/', dish_views.login, name="login"),
     path('sign_up/', dish_views.sign_up, name="sign_up"),
     path('logout_logics/', dish_views.logout_logics, name="logout_logics"),
     
     path("api/find-dishes/", dish_api.find_dishes, name="find_dishes"),
+    path("api/calculator-logics/", dish_api.calculator_logics, name="calculator_logics"),
 ]

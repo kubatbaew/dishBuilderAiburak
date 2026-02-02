@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from apps.dishes.models import Dish, DishIngredientGramm
 import json
 
+from django.shortcuts import get_object_or_404
+
 
 @require_POST
 def find_dishes(request):
@@ -25,3 +27,26 @@ def find_dishes(request):
         })
 
     return JsonResponse({"dishes": result})
+
+
+def calculator_logics(request):
+    dish_id = request.GET.get("dish_id")
+    grams = int(request.GET.get("grams"))
+
+    dish = get_object_or_404(Dish, id=dish_id)
+
+    base_grams = 300  # на сколько грамм заданы ингредиенты
+    coef = grams / base_grams
+
+    result = []
+
+    for item in dish.ingredients_gramms.select_related("dish_ingredient"):
+        result.append({
+            "ingredient": item.dish_ingredient.title,
+            "grams": round(item.gramm * coef)
+        })
+
+    return JsonResponse({
+        "dish": dish.title,
+        "ingredients": result
+    })

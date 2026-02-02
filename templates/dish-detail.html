@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
 
   <link rel="stylesheet" href="{% static 'dish-detail.css' %}">
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
 </head>
 <body>
 
@@ -35,13 +36,9 @@
         <i class="fa-solid fa-utensils"></i>
         Блюда
       </a>
-      <a href="#" style="align-items: center;">
+      <a href="{% url 'calculator' %}" style="align-items: center;">
         <i class="fa-solid fa-calculator"></i>
         Калькулятор
-      </a>
-      <a href="#" style="align-items: center;">
-        <i class="fa-solid fa-star"></i>
-        Избранное
       </a>
       <a href="{% url 'logout_logics' %}" style="align-items: center;">
         <i class="fa-solid fa-sign-out"></i>
