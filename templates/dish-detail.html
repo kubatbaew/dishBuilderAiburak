@@ -3,13 +3,13 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>DishBuilder — Блюда</title>
+  <title>DishBuilder — Салат Цезарь</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
 
-  <link rel="stylesheet" href="{% static 'dishes.css' %}">
+  <link rel="stylesheet" href="{% static 'dish-detail.css' %}">
 </head>
 <body>
 
@@ -53,27 +53,46 @@
   <!-- MAIN -->
   <main class="main">
 
-    <h1>Блюда 🍽️</h1>
-    <p class="subtitle">Подборка блюд с кратким описанием</p>
+    <!-- HEADER -->
+    <section class="dish-header">
+      <div class="dish-images">
+        <img src="{{ dish.image.url }}" alt="Салат Цезарь">
+      </div>
 
-    <!-- DISH LIST -->
-    <section class="dish-list">
+      <div class="dish-summary">
+        <h1>{{ dish.title }}</h1>
+        <p class="description">
+          {{ dish.description }}  
+        </p>
 
-      {% for dish in dishes %}
+        <blockquote>
+          «{{ dish.quote }}»
+        </blockquote>
+      </div>
+    </section>
 
-      <a href="{% url 'detail_dish' dish.id %}" style="text-decoration: none; color: #1f2933;">
-        <div class="dish-item">
+    <!-- INGREDIENTS -->
+    <section class="ingredients">
+      <h2>Ингредиенты на 300 грамм</h2>
 
-          <img src="{{ dish.image.url }}" alt="{{ dish.title }}">
-          <div class="dish-info">
-            <h3>{{ dish.title }}</h3>
-            <p>{{ dish.description|truncatewords:14 }}</p>
-          </div>
-        </div>
-      </a>
-
-      {% endfor %}
-
+      <table>
+        <thead>
+          <tr>
+            <th>Ингредиент</th>
+            <th>Количество</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          {% for ingredient in dish.ingredients_gramms.all %}
+            <tr>
+              <td>{{ ingredient.dish_ingredient.title }}</td>
+              <td>{{ ingredient.gramm }} г</td>
+            </tr>
+          {% endfor %}
+          
+        </tbody>
+      </table>
     </section>
 
   </main>

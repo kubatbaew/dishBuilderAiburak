@@ -11,7 +11,7 @@ def find_dishes(request):
     ingredient_slugs = data.get("ingredients", [])
 
     dishes = Dish.objects.filter(
-        dishingredientgramm__dish_ingredient__slug__in=ingredient_slugs
+        ingredients_gramms__dish_ingredient__slug__in=ingredient_slugs
     ).distinct()
 
     result = []

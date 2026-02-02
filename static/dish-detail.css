@@ -1,0 +1,141 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  background: #f7f7f7;
+  color: #1f2933;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: #111827;
+  color: #fff;
+  padding: 24px;
+}
+
+.logo {
+  display: flex;
+  gap: 12px;
+  font-size: 22px;
+  margin-bottom: 40px;
+}
+
+.logo i {
+  color: #4caf50;
+}
+
+.menu a {
+  display: flex;
+  gap: 14px;
+  padding: 12px 14px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.menu a:hover {
+  background: #1f2937;
+  color: #fff;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 40px 60px;
+  overflow-y: auto;
+}
+
+/* HEADER */
+.dish-header {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.dish-images {
+  width: 420px;
+}
+
+.dish-images img {
+  width: 100%;
+  border-radius: 18px;
+  height: 420px;
+  object-fit: cover;
+}
+
+.thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.thumbs img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+  opacity: 0.8;
+}
+
+.dish-summary {
+  max-width: 520px;
+}
+
+.dish-summary h1 {
+  font-size: 36px;
+  margin-bottom: 14px;
+}
+
+.description {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 20px;
+}
+
+blockquote {
+  background: #f0fdf4;
+  border-left: 4px solid #4caf50;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-style: italic;
+  color: #166534;
+}
+
+/* INGREDIENTS */
+.ingredients h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+tr:not(:last-child) td {
+  border-bottom: 1px solid #e5e7eb;
+}

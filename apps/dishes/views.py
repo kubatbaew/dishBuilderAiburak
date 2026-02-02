@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from django.contrib import messages
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from apps.dishes.models import DishIngredient, Dish
 
@@ -25,6 +25,13 @@ def list_dishes(request):
     dishes = Dish.objects.all()
 
     return render(request, "dishes.html", locals())
+
+
+def detail_dish(request, pk):
+    dish = get_object_or_404(Dish, pk=pk)
+
+    return render(request, "dish-detail.html", locals())
+
 
 
 def login(request):

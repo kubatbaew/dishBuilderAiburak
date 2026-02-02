@@ -52,6 +52,7 @@ class DishIngredientGramm(models.Model):
     dish = models.ForeignKey(
         Dish, on_delete=models.CASCADE,
         verbose_name="Блюдо",
+        related_name="ingredients_gramms",
     )
     dish_ingredient = models.ForeignKey(
         DishIngredient, on_delete=models.CASCADE,
