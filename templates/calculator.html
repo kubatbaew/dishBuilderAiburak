@@ -12,6 +12,30 @@
   <link rel="stylesheet" href="{% static 'calculator.css' %}">
   
   <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <style>
+    .save_to_faviorite {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-left: 1223px;
+      background: #FF9800;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .save_to_faviorite:hover {
+      background: #F57C00;
+    }
+
+    .save_to_faviorite:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
 
@@ -103,20 +127,25 @@
     <!-- RESULT -->
     <section class="result">
 
-        <div class="loader" id="loader">
-            <span></span>
-        </div>
+      <div class="loader" id="loader">
+          <span></span>
+      </div>
 
-        <table id="resultTable" style="display:none;">
-            <thead>
-            <tr>
-                <th>Ингредиент</th>
-                <th>Количество (г)</th>
-            </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-        </table>
+      <table id="resultTable" style="display:none;">
+          <thead>
+          <tr>
+              <th>Ингредиент</th>
+              <th>Количество (г)</th>
+          </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+      </table>
+
+      <button id="save_favorite_button" class="save_to_faviorite">
+        Сохранить в избранное
+        <i class="fa-solid fa-star"></i>
+      </button>
 
     </section>
 
@@ -130,7 +159,9 @@
   const gramsInput = document.getElementById('gramsInput');
   const loader = document.getElementById('loader');
   const table = document.getElementById('resultTable');
+  const save_favorite_button = document.getElementById('save_favorite_button');
   const tableBody = document.getElementById('tableBody');
+  let all_ingredients = []
 
   let selectedDishId = document.querySelector('.salad-card.active').dataset.id;
   const kgSelect = document.getElementById('kgSelect');
@@ -165,20 +196,32 @@
     }
 
     table.style.display = 'none';
+    save_favorite_button.style.display = 'none';
     loader.style.display = 'flex';
 
     fetch(`/api/calculator-logics/?dish_id=${selectedDishId}&grams=${grams}`)
       .then(res => res.json())
       .then(data => {
+        all_ingredients.length = 0;
 
         // ⏳ Лоадер минимум 1500 мс
         setTimeout(() => {
           loader.style.display = 'none';
           table.style.display = 'table';
 
+          save_favorite_button.style = '';
+          save_favorite_button.innerHTML = 'Сохранить в избранное <i class="fa-solid fa-star"></i>';
+          save_favorite_button.disabled = false;
+          save_favorite_button.style.display = 'flex';
+
+
           tableBody.innerHTML = '';
 
           data.ingredients.forEach(item => {
+            all_ingredients.push({
+              title: item.ingredient,
+              grams: item.grams,
+            });
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td>${item.ingredient}</td>
@@ -189,7 +232,52 @@
 
         }, 1500);
       });
+      
   });
+
+  save_favorite_button.addEventListener('click', () => {
+    console.log(all_ingredients);
+    save_favorite_button.innerHTML = 'Сохранено <i class="fa-solid fa-star"></i>';
+    save_favorite_button.style.background = "#4caf50"
+    save_favorite_button.style.marginLeft = '1302px';
+
+    save_favorite_button.disabled = true;
+
+    fetch('/api/save_favorite/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({
+        dish_id: selectedDishId,
+        ingredients: all_ingredients
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+    });
+
+  })
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
 </script>
 
 </body>

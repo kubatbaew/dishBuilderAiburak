@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from apps.dishes.models import Dish, DishIngredientGramm
+from apps.dishes.models import Dish, DishIngredientGramm, Favorite, FavoriteItems
 import json
 
 from django.shortcuts import get_object_or_404
@@ -51,3 +51,31 @@ def calculator_logics(request):
         "dish": dish.title,
         "ingredients": result
     })
+
+
+def save_to_favorite(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        dish_id = data.get('dish_id')
+        ingredients = data.get('ingredients')
+        
+        print(dish_id)
+        print(ingredients)
+
+        dish = Dish.objects.get(id=dish_id)
+
+        user_favorite = Favorite.objects.create(
+            user=request.user,
+            dish=dish,
+        )
+        items = [
+            FavoriteItems(
+                favorite=user_favorite,
+                title=item["title"],
+                gramm=item["grams"]
+            )
+            for item in ingredients
+        ]
+        FavoriteItems.objects.bulk_create(items)
+
+        return JsonResponse({'status': 'ok'})

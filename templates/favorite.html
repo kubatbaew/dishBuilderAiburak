@@ -11,6 +11,52 @@
 
   <link rel="stylesheet" href="{% static 'dishes.css' %}">
   <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      z-index: 1000;
+    }
+
+    .modal-wrapper {
+      background: #f9fafb;
+      width: 100%;
+      max-width: 1000px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px;
+      border-radius: 24px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+    .modal-wrapper {
+      transform: scale(0.9);
+      opacity: 0;
+      transition: 0.25s ease;
+    }
+
+    .modal.show .modal-wrapper {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+
+  </style>
 </head>
 <body>
 
@@ -54,31 +100,162 @@
   <!-- MAIN -->
   <main class="main">
 
-    <h1>Блюда 🍽️</h1>
-    <p class="subtitle">Подборка блюд с кратким описанием</p>
+    <h1>Избранное ⭐</h1>
+    <p class="subtitle">Все ваши избранные граммовки</p>
 
     <!-- DISH LIST -->
     <section class="dish-list">
 
-      {% for dish in dishes %}
+      {% for favorite in favorites %}
+      
+      <div class="dish-item open-modal"
+          data-title="{{ favorite.dish.title }}"
+          data-description="{{ favorite.dish.description }}"
+          data-image="{{ favorite.dish.image.url }}"
+          data-quote="{{ favorite.dish.quote }}"
+          data-ingredients='[
+            {% for ingredient in favorite.favorites_items.all %}
+              {
+                "title": "{{ ingredient.title }}",
+                "gramm": "{{ ingredient.gramm }}"
+              }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          ]'>
 
-      <a href="{% url 'detail_dish' dish.id %}" style="text-decoration: none; color: #1f2933;">
-        <div class="dish-item">
+        <img src="{{ favorite.dish.image.url }}">
+        <div class="dish-info">
+          <h3>{{ favorite.dish.title }}</h3>
+          <p>{{ favorite.dish.description|truncatewords:14 }}</p>
 
-          <img src="{{ dish.image.url }}" alt="{{ dish.title }}">
-          <div class="dish-info">
-            <h3>{{ dish.title }}</h3>
-            <p>{{ dish.description|truncatewords:14 }}</p>
+          <div class="dish-actions">
+            <a href="{% url 'delete_favorite' favorite.id %}" class="delete-favorite">
+              <i class="fa-solid fa-trash"></i>
+              Удалить с избранного
+            </a>
           </div>
         </div>
-      </a>
+
+      </div>
 
       {% endfor %}
 
     </section>
 
   </main>
+
 </div>
 
+<div id="dishModal" class="modal">
+  <div class="modal-wrapper">
+
+    <span class="close">&times;</span>
+
+    <div class="dish-header" style="display: none;">
+      <div class="dish-images">
+        <img id="modalImage" src="">
+      </div>
+
+      <div class="dish-summary">
+        <h1 id="modalTitle"></h1>
+        <p class="description" id="modalDescription"></p>
+        <blockquote id="modalQuote"></blockquote>
+      </div>
+    </div>
+
+    <div class="ingredients">
+      <h2>Сохраненные ингредиенты</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Ингредиент</th>
+            <th>Количество</th>
+          </tr>
+        </thead>
+        <tbody id="modalIngredients"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const modal = document.getElementById('dishModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalDescription = document.getElementById('modalDescription');
+      const modalImage = document.getElementById('modalImage');
+      const modalQuote = document.getElementById('modalQuote');
+      const modalIngredients = document.getElementById('modalIngredients');
+      const closeBtn = document.querySelector('.close');
+
+      /* -------------------------
+        ОТКЛЮЧАЕМ МОДАЛ ДЛЯ DELETE
+      ------------------------- */
+      document.querySelectorAll('.delete-favorite').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation(); // ⛔ запрещаем всплытие
+        });
+      });
+
+      /* -------------------------
+        ОТКРЫТИЕ МОДАЛА
+      ------------------------- */
+      document.querySelectorAll('.open-modal').forEach(item => {
+        item.addEventListener('click', () => {
+
+          modalTitle.textContent = item.dataset.title;
+          modalDescription.textContent = item.dataset.description;
+          modalImage.src = item.dataset.image;
+          modalQuote.textContent = item.dataset.quote;
+
+          modalIngredients.innerHTML = '';
+
+          const ingredients = JSON.parse(item.dataset.ingredients);
+
+          ingredients.forEach(ing => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${ing.title}</td>
+              <td>${Number(ing.gramm).toLocaleString('ru-RU')} г</td>
+            `;
+            modalIngredients.appendChild(row);
+          });
+
+          modal.style.display = 'flex';
+          modal.classList.add('show');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      /* -------------------------
+        ЗАКРЫТИЕ МОДАЛА
+      ------------------------- */
+      closeBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+
+      function closeModal() {
+        modal.style.display = 'none';
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+
+    });
+
+  </script>
 </body>
 </html>

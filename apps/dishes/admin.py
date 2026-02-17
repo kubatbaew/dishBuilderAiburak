@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.dishes.models import Dish, DishIngredient, DishIngredientGramm
+from apps.dishes.models import Dish, DishIngredient, DishIngredientGramm, Favorite, FavoriteItems
 
 
 class DishIngredientGrammInline(admin.TabularInline):
@@ -27,3 +27,7 @@ class DishIngredientAdmin(admin.ModelAdmin):
 class DishIngredientGrammAdmin(admin.ModelAdmin):
     list_display = ("dish", "dish_ingredient", "gramm")
     list_filter = ("dish",)
+
+
+admin.site.register(Favorite)
+admin.site.register(FavoriteItems)

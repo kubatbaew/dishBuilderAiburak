@@ -1,5 +1,9 @@
 from django.db import models
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class Dish(models.Model):
     image = models.ImageField(
@@ -70,3 +74,44 @@ class DishIngredientGramm(models.Model):
         verbose_name = "Ингредиент Блюда Грамм"
         verbose_name_plural = "Ингредиенты Блюда Граммы"
         unique_together = ("dish", "dish_ingredient")
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name="my_favorite",
+        verbose_name="Пользователь",
+    )
+    dish = models.ForeignKey(
+        Dish, on_delete=models.CASCADE,
+        verbose_name="Блюдо"
+    )
+
+    def __str__(self):
+        return self.user.username
+    
+    class Meta:
+        verbose_name = "Избранный"
+        verbose_name_plural = "Избранные"
+
+
+class FavoriteItems(models.Model):
+    favorite = models.ForeignKey(
+        Favorite, on_delete=models.CASCADE,
+        related_name="favorites_items",
+        verbose_name="Избранное",
+    )
+    title = models.CharField(   
+        max_length=120,
+        verbose_name="Название",
+    )
+    gramm = models.PositiveSmallIntegerField(
+        verbose_name="Грамм",
+    )
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = "Элемент избранных"
+        verbose_name_plural = "Элементы избранных"

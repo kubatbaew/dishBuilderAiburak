@@ -122,3 +122,121 @@ h1 {
   border-color: #4caf50;
   transform: translateY(-2px);
 }
+
+
+/* HEADER */
+.dish-header {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.dish-images {
+  width: 420px;
+}
+
+.dish-images img {
+  width: 100%;
+  border-radius: 18px;
+  height: 420px;
+  object-fit: cover;
+}
+
+.thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.thumbs img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+  opacity: 0.8;
+}
+
+.dish-summary {
+  max-width: 520px;
+}
+
+.dish-summary h1 {
+  font-size: 36px;
+  margin-bottom: 14px;
+}
+
+.description {
+  font-size: 16px;
+  color: #4b5563;
+  margin-bottom: 20px;
+}
+
+blockquote {
+  background: #f0fdf4;
+  border-left: 4px solid #4caf50;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-style: italic;
+  color: #166534;
+}
+
+/* INGREDIENTS */
+.ingredients h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+tr:not(:last-child) td {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+.dish-actions {
+  margin-top: 14px;
+}
+
+.delete-favorite {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 215px;
+
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  background: #fff;
+  color: #dc2626;
+
+  border: 1px solid #fecaca;
+
+  transition: 0.2s ease;
+}
+
+.delete-favorite:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  transform: translateY(-2px);
+}

@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from django.shortcuts import render, redirect, get_object_or_404
 
-from apps.dishes.models import DishIngredient, Dish
+from apps.dishes.models import DishIngredient, Dish, Favorite
 
 
 @login_required(login_url="login")
@@ -30,9 +30,20 @@ def list_dishes(request):
 
 @login_required(login_url="login")
 def favorite(request):
-    dishes = Dish.objects.all()
+    favorites = Favorite.objects.filter(user=request.user)[::-1]
 
     return render(request, "favorite.html", locals())
+
+@login_required(login_url="login")
+def delete_favorite(request, pk):
+    favorite = get_object_or_404(
+        Favorite,
+        id=pk,
+        user=request.user
+    )
+    favorite.delete()
+    
+    return redirect('favorite')
 
 
 @login_required(login_url="login")

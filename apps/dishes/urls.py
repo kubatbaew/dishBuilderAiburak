@@ -9,6 +9,7 @@ urlpatterns = [
     path('ingredients/', dish_views.ingredients, name="ingredients"),
     path('dishes/', dish_views.list_dishes, name="list_dishes"),
     path('favorite/', dish_views.favorite, name="favorite"),
+    path('delete_favorite/<int:pk>', dish_views.delete_favorite, name="delete_favorite"),
     path('dishes/<int:pk>', dish_views.detail_dish, name="detail_dish"),
     path('calculator/', dish_views.calculator, name="calculator"),
 
@@ -18,4 +19,5 @@ urlpatterns = [
     
     path("api/find-dishes/", dish_api.find_dishes, name="find_dishes"),
     path("api/calculator-logics/", dish_api.calculator_logics, name="calculator_logics"),
+    path("api/save_favorite/", dish_api.save_to_favorite, name="save_to_favorite"),
 ]
