@@ -29,6 +29,13 @@ def list_dishes(request):
 
 
 @login_required(login_url="login")
+def favorite(request):
+    dishes = Dish.objects.all()
+
+    return render(request, "favorite.html", locals())
+
+
+@login_required(login_url="login")
 def detail_dish(request, pk):
     dish = get_object_or_404(Dish, pk=pk)
 

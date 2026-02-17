@@ -8,6 +8,7 @@ urlpatterns = [
     path('', dish_views.homepage, name="homepage"),
     path('ingredients/', dish_views.ingredients, name="ingredients"),
     path('dishes/', dish_views.list_dishes, name="list_dishes"),
+    path('favorite/', dish_views.favorite, name="favorite"),
     path('dishes/<int:pk>', dish_views.detail_dish, name="detail_dish"),
     path('calculator/', dish_views.calculator, name="calculator"),
 

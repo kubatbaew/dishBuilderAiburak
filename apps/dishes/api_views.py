@@ -31,12 +31,13 @@ def find_dishes(request):
 
 def calculator_logics(request):
     dish_id = request.GET.get("dish_id")
-    grams = int(request.GET.get("grams"))
+    grams = float(request.GET.get("grams"))
 
     dish = get_object_or_404(Dish, id=dish_id)
 
-    base_grams = 300  # на сколько грамм заданы ингредиенты
-    coef = grams / base_grams
+    base_grams = 1  # на сколько грамм заданы ингредиенты
+    coef = base_grams * grams
+    print(coef)
 
     result = []
 

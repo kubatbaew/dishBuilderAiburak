@@ -116,6 +116,27 @@ h1 {
   border: 1px solid #d1d5db;
 }
 
+.grams select {
+  width: 200px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+
+  /* убираем стандартную стрелку */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* кастомная стрелка */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='gray' viewBox='0 0 16 16'><path d='M1.5 5.5l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+
 .grams button {
   background: #4caf50;
   color: #fff;
