@@ -11,6 +11,14 @@
 
   <link rel="stylesheet" href="{% static 'ingredients.css' %}">
   <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <style>
+    .dish-card a {
+      text-decoration: none;
+      list-style-type: none;
+      color: #000;
+    }
+    
+  </style>
 </head>
 <body>
 
@@ -157,11 +165,13 @@
       const card = document.createElement('div');
       card.className = 'dish-card';
       card.innerHTML = `
-        <img src="${dish.image}" alt="${dish.name}">
-        <div class="dish-info">
-          <h3>${dish.name}</h3>
-          <p>${dish.desc}</p>
-        </div>
+        <a href="/dishes/${dish.id}">
+          <img src="${dish.image}" alt="${dish.name}">
+          <div class="dish-info">
+            <h3>${dish.name}</h3>
+            <p>${dish.desc}</p>
+          </div>
+        </a>
       `;
       dishList.appendChild(card);
     });

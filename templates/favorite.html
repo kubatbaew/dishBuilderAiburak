@@ -78,7 +78,7 @@
         <i class="fa-solid fa-leaf"></i>
         Ингредиенты
       </a>
-      <a href="{% url 'list_dishes' %}" class="active" style="align-items: center;">
+      <a href="{% url 'list_dishes' %}" style="align-items: center;">
         <i class="fa-solid fa-utensils"></i>
         Блюда
       </a>
@@ -120,7 +120,8 @@
                 "gramm": "{{ ingredient.gramm }}"
               }{% if not forloop.last %},{% endif %}
             {% endfor %}
-          ]'>
+          ]'
+          style="cursor: pointer;">
 
         <img src="{{ favorite.dish.image.url }}">
         <div class="dish-info">
